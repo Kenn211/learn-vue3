@@ -1,0 +1,34 @@
+:root {
+  --primary-color: #007bff;
+}
+
+body{
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.6;
+}
+
+.add-todo-input,
+.edit-todo-input {
+    outline: none;
+}
+
+.add-todo-input:focus,
+.edit-todo-input:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.view-opt-label,
+.date-label {
+    font-size: 0.8rem;
+}
+
+.edit-todo-input {
+    font-size: 1.7rem;
+}
+
+
+
+.todo-item.editing .todo-actions .edit-icon {
+    display: none;
+}
