@@ -1,46 +1,55 @@
 <script lang="ts">
-    import { defineComponent, PropType } from 'vue';
+    import { defineComponent, PropType, ref} from 'vue';
+
     export default defineComponent({
         name: 'TodoListSectionComp',
         
         props: {
-        info: {
-            type: Object as PropType<any>,
-            default: ''
-        },
-        textInputInfo: {
+            info: {
             type: Object,
-            default: ''
-        },
-    },
-    methods: {
-        handleDelete(e: object): void {
-            var data = {
-                id: this.info.id,
+            default: () => []
+            },
+            textInputInfo: {
+            type: Object as any,
+            default: () => []
             }
-            this.$emit('deleteInfo', data);
         },
-        handleToActive(): void {
+    setup(props,context) {
+       
+
+        function handleDelete(): void {
             var data = {
-                id: this.info.id,
-                status: this.info.status
+                id: props.info.id,
+            }
+            context.emit('deleteInfo', data);
+        };
+
+        function handleToActive(): void {
+            var data = {
+                id: props.info.id,
+                status: props.info.status
+            }
+            context.emit('toActive', data)
+        };
+
+        function handleToCompleted(): void {
+            var data = {
+                id: props.info.id,
+                status: props.info.status
 
             }
-            this.$emit('toActive', data)
-        },
-        handleToCompleted(): void {
-            var data = {
-                id: this.info.id,
-                status: this.info.status
+            context.emit('toCompleted', data)
+        };
 
-            }
-            this.$emit('toCompleted', data)
-        },
-        handletoHasDueDate(): void {
+        function handletoHasDueDate(): void {
             var data = {
-                id: this.info.id,
+                id: props.info.id,
             }
-            this.$emit('toHasDueDate', data)
+            context.emit('toHasDueDate', data)
+        };
+        
+        return{
+            handleDelete, handleToActive, handleToCompleted,handletoHasDueDate,props,context
         }
     }
 
@@ -50,15 +59,15 @@
 <template>
     
             <!-- Todo Item 1 -->
-        <div v-if="info.status == 'Completed'">
+        <div v-if="props.info.status == 'Completed'">
             <div class="row px-3 align-items-center todo-item rounded">
                 <div class="col-auto m-1 p-0">
                     <h2 class="">
-                        <i class="far fa-check-square checkbox-check mt-2 text-primary" style="justify-content: right;"></i>
+                        <i class="far fa-check-square checkbox-check mt-2 text-primary" style="justify-content: right; cursor: pointer;"></i>
                     </h2>
                 </div>
                 <div class="col px-1 m-1">
-                    <input type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" disabled v-bind:value="info.title">
+                    <input type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" disabled v-bind:value="props.info.title">
                 </div>
                 <div class="col-auto m-1 p-0 todo-actions">
                     <div class=" todo-action-icons">
@@ -81,15 +90,15 @@
 
 
             <!-- Todo Item 2 -->
-        <div v-if="info.status == 'Active'">
+        <div v-if="props.info.status == 'Active'">
             <div class="row px-3 align-items-center todo-item rounded">
                 <div class="col-auto m-1 p-0">
                     <h2 class="">
-                        <i v-on:click="handleToCompleted" class="far fa-check-square checkbox-check mt-2 text-primary" style="justify-content: right;"></i>
+                        <i v-on:click="handleToCompleted" class="far fa-square checkbox-check mt-2 text-primary" style="justify-content: right; cursor: pointer;"></i>
                     </h2>
                 </div>
                 <div class="col px-1 m-1">
-                    <input v-bind:value="info.title" type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" disabled>
+                    <input v-bind:value="props.info.title" type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" disabled>
                 </div>
                 <div class="col-auto m-1 p-0 px-3 time-list">
                     <div class="row">
@@ -119,15 +128,15 @@
         </div>
 
             <!-- Todo Item 3 -->
-        <div v-if="info.status == 'Has-due-date'">
+        <div v-if="props.info.status == 'Has-due-date'">
             <div class="row px-3 align-items-center todo-item rounded">
                 <div class="col-auto m-1 p-0">
                     <h2 class="">
-                        <i v-on:click="handleToActive" class="far fa-check-square checkbox-check mt-2 text-primary" style="justify-content: right;"></i>
+                        <i v-on:click="handleToActive" class="far fa-square checkbox-check mt-2 text-primary" style="justify-content: right; cursor: pointer;"></i>
                     </h2>
                 </div>
                 <div class="col px-1 m-1">
-                    <input type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" v-model="info.title">
+                    <input type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded px-3" v-model="props.info.title">
                 </div>
                 <div class="col-auto m-1 p-0 todo-actions">
                     <div class=" todo-action-icons">
@@ -138,7 +147,7 @@
                     </div>
                     <div class="row todo-created-info">
                         <div class="col-auto d-flex align-items-center pr-2">
-                            <i class="fas fa-info-circle my-2 px-2 text-black-50 btn"></i>
+                            <i class="fa-solid fa-circle-info my-2 px-2 text-black-50 btn"></i>
                             <label class="date-label my-2 text-black-50">28th Jun 2020</label>
                         </div>
                     </div>

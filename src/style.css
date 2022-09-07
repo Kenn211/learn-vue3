@@ -32,3 +32,10 @@ body{
 .todo-item.editing .todo-actions .edit-icon {
     display: none;
 }
+
+
+
+.todo-item:hover {
+    background-color: rgb(213, 222, 222);
+    box-shadow: inset;
+}

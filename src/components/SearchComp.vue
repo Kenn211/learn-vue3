@@ -5,7 +5,7 @@ export default defineComponent({
     name: "SearchComp",
     props: {
         textInputInfo: {
-            type: Object,
+            type: Object as any,
             default: () => []
         },
         listInfo: {
@@ -13,18 +13,21 @@ export default defineComponent({
             default: () => []
         }
     },
-    setup() {
-        
-    },
-    methods: {
-        handleAdd(e: object): void{
+   
+    setup(props,context) {
+        // const emit = defineEmits(['addInfo'])
+
+        function handleAdd() {
             var data = {
-                text: this.textInputInfo,
+                text: props.textInputInfo,
             }
-            this.$emit('addInfo', data);
-            this.textInputInfo.value = "";
+            context.emit('addInfo', data);
+            props.textInputInfo.value = "";
+        };
+        return{
+            handleAdd,props,context
         }
-    }
+    },
     
 });
 
@@ -40,7 +43,6 @@ export default defineComponent({
             <div class="col-auto px-0 mx-0 mr-2 flex">
                 <i  class="fas fa-calendar-alt mr-3 fs-12 icon-calendar"></i>
                 <input type="reset" class="btn btn-primary" value="Add" @click="handleAdd"/>
-
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType,ref, computed , reactive} from "vue";
 import TodoListSectionComp from "./TodoListSectionComp.vue";
+import { Info } from '../interfaces/interfaces';
 export default defineComponent({
     name: "ListInfoComp",
     components: {
@@ -8,49 +9,63 @@ export default defineComponent({
     },
     props: {
         listInfo: {
-            type: Array as any,
-            default: ''
+            type: Object,
+            default: () => []
         }
     },
-    data() {
-        return{
+    
+    // data() {
+    //     return{
+    //         filterSelect: '',
+    //         selected: ''
+    //     }
+    // },
+
+    
+    setup(props,context){
+        const dataReturn = reactive({
             filterSelect: '',
             selected: ''
-        }
-    },
-    methods: {
-        deleteInfo(data: any) {
-            this.$emit("deleteInfoEvent", data);
-            console.log(this.listInfo)
-        },
-        toActive(data: any) {
-            this.$emit("toActiveEvent", data);
-        },
-        toCompleted(data: any) {
-            this.$emit("toCompletedEvent", data);
-        },
-        toHasDueDate(data: any) {
-            this.$emit("toHasDueDateEvent", data);
-        },
-        toFilterEvent(data: any) {
-            console.log(data.filterSelect, "123");
-        },
-    },
-    computed: {
-        filterInfo() {
-            const oppsitethat = this;
+        });
+
+        const filterInfo = computed(() => filterInfo1())
+
+        function deleteInfo(data: Info) {
+            context.emit("deleteInfoEvent", data);
+        };
+
+        function toActive(data: Info) {
+            context.emit("toActiveEvent", data);
+        };
+
+        function toCompleted(data: Info) {
+            context.emit("toCompletedEvent", data);
+        };
+
+        function toHasDueDate(data: Info) {
+            context.emit("toHasDueDateEvent", data);
+        };
+
+        //computed callback
+        function filterInfo1() {
+            const oppsitethat = dataReturn;
             if (oppsitethat.filterSelect == "All" || oppsitethat.filterSelect == "") {
-                return (this.listInfo)
+                return (props.listInfo)
             }
             else {
                 return (
-                    this.listInfo.filter(function (item: any) {
+                    props.listInfo.filter(function (item: Info) {
                         return item.status == oppsitethat.filterSelect
                     })
                 );
             }
         }
-    }
+
+        return {
+            deleteInfo,toActive,toCompleted,toHasDueDate,filterInfo,dataReturn,props,context
+        }
+    },
+    
 })
 </script>
 
@@ -58,7 +73,7 @@ export default defineComponent({
     <div class="row m-1 p-3 px-5 justify-content-end">
         <div class="col-auto d-flex align-items-center">
             <label class="text-secondary my-2 pr-2 view-opt-label">Filter</label>
-            <select class="select-css custom-select custom-select-sm btn my-2" v-model="filterSelect">
+            <select class="select-css custom-select custom-select-sm btn my-2" v-model="dataReturn.filterSelect">
                 <option value="" selected>All</option>
                 <option value="Completed">Completed</option>
                 <option value="Active">Active</option>
@@ -78,7 +93,7 @@ export default defineComponent({
         <div class="col mx-auto">
     <TodoListSectionComp v-for="info in filterInfo" :key="info.id" :info="info" @deleteInfo="deleteInfo"
                     @toActive="toActive" @toCompleted="toCompleted" @toHasDueDate="toHasDueDate"
-                    v-on:toFilterEvent="toFilterEvent"></TodoListSectionComp>
+                    ></TodoListSectionComp>
         </div>
     </div>
 </template>
