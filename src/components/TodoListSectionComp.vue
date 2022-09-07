@@ -1,27 +1,29 @@
-<script lang="ts">
-    import { defineComponent, PropType, ref} from 'vue';
+<script setup lang="ts">
+    import { defineProps, defineEmits } from 'vue';
 
-    export default defineComponent({
-        name: 'TodoListSectionComp',
-        
-        props: {
-            info: {
+    name: 'TodoListSectionComp'
+
+    const props = defineProps ({
+        info: {
             type: Object,
             default: () => []
-            },
-            textInputInfo: {
+        },
+        textInputInfo: {
             type: Object as any,
             default: () => []
-            }
-        },
-    setup(props,context) {
-       
+        }
+
+    })
+
+
+    const emit = defineEmits(['deleteInfo','toActive','toCompleted', 'toHasDueDate'])
+
 
         function handleDelete(): void {
             var data = {
                 id: props.info.id,
             }
-            context.emit('deleteInfo', data);
+            emit('deleteInfo', data);
         };
 
         function handleToActive(): void {
@@ -29,7 +31,7 @@
                 id: props.info.id,
                 status: props.info.status
             }
-            context.emit('toActive', data)
+            emit('toActive', data)
         };
 
         function handleToCompleted(): void {
@@ -38,22 +40,17 @@
                 status: props.info.status
 
             }
-            context.emit('toCompleted', data)
+            emit('toCompleted', data)
         };
 
         function handletoHasDueDate(): void {
             var data = {
                 id: props.info.id,
             }
-            context.emit('toHasDueDate', data)
+            emit('toHasDueDate', data)
         };
         
-        return{
-            handleDelete, handleToActive, handleToCompleted,handletoHasDueDate,props,context
-        }
-    }
-
-    })
+    
 </script>
 
 <template>

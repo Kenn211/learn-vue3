@@ -1,15 +1,9 @@
-<script lang="ts">
-import { defineComponent, PropType, ref,reactive,toRaw } from 'vue';
+<script setup lang="ts">
+import { reactive } from 'vue';
 import ListInfoComp from './ListInfoComp.vue';
 import SearchComp from './SearchComp.vue';
 import {Info} from '../interfaces/interfaces';
-export default defineComponent({
-    name: "ContentComp",
-    components: {
-    ListInfoComp,
-    SearchComp
-    },
-    setup() {
+
 
         let listInfo:Info[] = reactive([
                 { id: 1, title: "Build My To-do by VueJS", status: "Completed" },
@@ -54,12 +48,6 @@ export default defineComponent({
             listInfo[(data.id) - 1].status = "Has-due-date"
         };
 
-        
-        return{
-            listInfo,addInfo,handleDeleteInfo,handleToActiveEvent,handleToCompletedEvent,toHasDueDateEvent
-        }
-    },
-})
 </script>
 
 <template>

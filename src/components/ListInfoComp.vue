@@ -1,49 +1,41 @@
-<script lang="ts">
-import { defineComponent, PropType,ref, computed , reactive} from "vue";
+<script setup lang="ts">
+import { computed , reactive} from "vue";
 import TodoListSectionComp from "./TodoListSectionComp.vue";
 import { Info } from '../interfaces/interfaces';
-export default defineComponent({
-    name: "ListInfoComp",
-    components: {
-        TodoListSectionComp
-    },
-    props: {
-        listInfo: {
-            type: Object,
-            default: () => []
-        }
-    },
-    
-    // data() {
-    //     return{
-    //         filterSelect: '',
-    //         selected: ''
-    //     }
-    // },
+import { defineProps, defineEmits } from "vue";
 
+name: "ListInfoComp";
+
+const props = defineProps({
+    listInfo: {
+        type: Object,
+        default: () => []
+    }
+})
+
+const emit = defineEmits(['deleteInfoEvent','toActiveEvent','toCompletedEvent','toHasDueDateEvent' ])
     
-    setup(props,context){
+
         const dataReturn = reactive({
             filterSelect: '',
             selected: ''
         });
 
-        const filterInfo = computed(() => filterInfo1())
 
         function deleteInfo(data: Info) {
-            context.emit("deleteInfoEvent", data);
+            emit("deleteInfoEvent", data);
         };
 
         function toActive(data: Info) {
-            context.emit("toActiveEvent", data);
+            emit("toActiveEvent", data);
         };
 
         function toCompleted(data: Info) {
-            context.emit("toCompletedEvent", data);
+            emit("toCompletedEvent", data);
         };
 
         function toHasDueDate(data: Info) {
-            context.emit("toHasDueDateEvent", data);
+            emit("toHasDueDateEvent", data);
         };
 
         //computed callback
@@ -61,12 +53,9 @@ export default defineComponent({
             }
         }
 
-        return {
-            deleteInfo,toActive,toCompleted,toHasDueDate,filterInfo,dataReturn,props,context
-        }
-    },
-    
-})
+        const filterInfo = computed(() => filterInfo1())
+
+       
 </script>
 
 <template>
