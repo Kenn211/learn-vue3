@@ -1,9 +1,7 @@
-<script lang="ts">
-import { defineComponent, ref, PropType } from 'vue';
+<script setup lang="ts">
+import { defineProps, defineEmits} from 'vue';
 
-export default defineComponent({
-    name: "SearchComp",
-    props: {
+const props = defineProps ({
         textInputInfo: {
             type: Object as any,
             default: () => []
@@ -12,24 +10,19 @@ export default defineComponent({
             type: Array as any,
             default: () => []
         }
-    },
+    })
    
-    setup(props,context) {
-        // const emit = defineEmits(['addInfo'])
+
+        const emit = defineEmits(['addInfo'])
 
         function handleAdd() {
             var data = {
                 text: props.textInputInfo,
             }
-            context.emit('addInfo', data);
+            emit('addInfo', data);
             props.textInputInfo.value = "";
         };
-        return{
-            handleAdd,props,context
-        }
-    },
-    
-});
+
 
 </script>
 
