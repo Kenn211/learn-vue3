@@ -1,54 +1,65 @@
 <script setup lang="ts">
-    import { defineProps, defineEmits } from 'vue';
-
-    name: 'TodoListSectionComp'
-
-    const props = defineProps ({
-        info: {
-            type: Object,
-            default: () => []
-        },
-        textInputInfo: {
-            type: Object as any,
-            default: () => []
-        }
-
-    })
+import { defineProps, defineEmits, PropType } from 'vue';
+import { Info } from '../interfaces/interfaces';
 
 
-    const emit = defineEmits(['deleteInfo','toActive','toCompleted', 'toHasDueDate'])
+const props = defineProps <{
+    info: Info
+}>()
+
+const emit = defineEmits<{
+    (e: 'deleteInfo', data: Info): void
+    (e: 'toActive', data: Info, status: string): void
+    (e: 'toCompleted', data: Info,status: string): void
+    (e: 'toHasDueDate', data: Info,status: string): void
+    // (e: 'handleChangeStatus', data: Info,status: string): void
+}>()
 
 
-        function handleDelete(): void {
-            var data = {
-                id: props.info.id,
-            }
-            emit('deleteInfo', data);
-        };
+function handleDelete(): void {
+    var data= {
+        id: props.info.id,
+        title: props.info.title,
+        status: props.info.status
+    }
+    emit('deleteInfo', data);
+};
 
-        function handleToActive(): void {
-            var data = {
-                id: props.info.id,
-                status: props.info.status
-            }
-            emit('toActive', data)
-        };
+// function handleChangeStatus(): void {
+//     var data = {
+//         id: props.info.id,
+//         title: props.info.title,
+//         status: props.info.status
+//     }
+//     emit('handleChangeStatus', data,'')
+// }
 
-        function handleToCompleted(): void {
-            var data = {
-                id: props.info.id,
-                status: props.info.status
+function handleToActive(): void {
+    var data = {
+        id: props.info.id,
+        title: props.info.title,
+        status: props.info.status
+    }
+    emit('toActive', data,'')
+};
 
-            }
-            emit('toCompleted', data)
-        };
+function handleToCompleted(): void {
+    var data = {
+        id: props.info.id,
+        title: props.info.title,
+        status: props.info.status
+    }
+    emit('toCompleted', data, '')
+};
 
-        function handletoHasDueDate(): void {
-            var data = {
-                id: props.info.id,
-            }
-            emit('toHasDueDate', data)
-        };
+function handletoHasDueDate(): void {
+    var data = {
+        id: props.info.id,
+        title: props.info.title,
+        status: props.info.status
+    }
+    emit('toHasDueDate', data,'')
+};
         
     
 </script>

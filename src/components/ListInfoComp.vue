@@ -1,61 +1,57 @@
 <script setup lang="ts">
-import { computed , reactive} from "vue";
+import { computed , reactive,PropType} from "vue";
+import { Info } from "../interfaces/interfaces";
 import TodoListSectionComp from "./TodoListSectionComp.vue";
-import { Info } from '../interfaces/interfaces';
-import { defineProps, defineEmits } from "vue";
 
-name: "ListInfoComp";
-
-const props = defineProps({
-    listInfo: {
-        type: Object,
-        default: () => []
-    }
-})
-
-const emit = defineEmits(['deleteInfoEvent','toActiveEvent','toCompletedEvent','toHasDueDateEvent' ])
+const props = defineProps<{
+    listInfo: Info[]
+}>(
     
-
-        const dataReturn = reactive({
-            filterSelect: '',
-            selected: ''
-        });
+)
 
 
-        function deleteInfo(data: Info) {
-            emit("deleteInfoEvent", data);
-        };
+const emit = defineEmits<{
+    (e: "statusChange",data: Info ,status: string): void
+    (e: "deleteInfo",data: Info): void
+}>()
+    
+const dataReturn = reactive({
+    filterSelect: '',
+    selected: ''
+});
 
-        function toActive(data: Info) {
-            emit("toActiveEvent", data);
-        };
 
-        function toCompleted(data: Info) {
-            emit("toCompletedEvent", data);
-        };
+function deleteInfo(data: Info) {
+    emit("deleteInfo",data);
+};
 
-        function toHasDueDate(data: Info) {
-            emit("toHasDueDateEvent", data);
-        };
+function toActive(data: Info, status: string) {
+    emit("statusChange", data, "Active");
+};
 
-        //computed callback
-        function filterInfo1() {
-            const oppsitethat = dataReturn;
-            if (oppsitethat.filterSelect == "All" || oppsitethat.filterSelect == "") {
-                return (props.listInfo)
-            }
-            else {
-                return (
-                    props.listInfo.filter(function (item: Info) {
-                        return item.status == oppsitethat.filterSelect
-                    })
-                );
-            }
-        }
+function toCompleted(data: Info, status: string) {
+    emit("statusChange", data, "Completed");
+};
 
-        const filterInfo = computed(() => filterInfo1())
+function toHasDueDate(data: Info, status: string) {
+    emit("statusChange", data, "Has-due-date");
+};
 
-       
+//computed callback
+function filterInfo1() {
+    const sizeFilter = dataReturn;
+    if (sizeFilter.filterSelect == "All" || sizeFilter.filterSelect == "") {
+        return (props.listInfo)
+    }
+    else {
+        return (
+            props.listInfo.filter(function (item: Info) {
+                return item.status == sizeFilter.filterSelect
+            })
+        );
+    }
+}
+const filterInfo = computed(() => filterInfo1())
 </script>
 
 <template>
